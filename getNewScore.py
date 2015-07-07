@@ -16,11 +16,14 @@ def is_sky_points_updated(oldScore, url):
 
 FILENAME_FOR_STORAGE = ".tv2-tourmanager-sky-points-stored"
 def store_sky_points(score):
-	open(FILENAME_FOR_STORAGE, "w").write(str(score))
+	import sys,os
+	open(os.path.dirname(sys.argv[0])+"/"+FILENAME_FOR_STORAGE, "w").write(str(score))
 	return score
 
 def read_old_sky_points():
-	return int(open(FILENAME_FOR_STORAGE, "r").read())
+	
+	import sys,os
+	return int(open(os.path.dirname(sys.argv[0])+"/"+FILENAME_FOR_STORAGE, "r").read())
 
 if __name__=="__main__":
 	print is_sky_points_updated(read_old_sky_points(), "http://tourmanager.tv2.no/stats/?view=con&year=CUR")

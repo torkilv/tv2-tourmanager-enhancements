@@ -1,5 +1,6 @@
 #!/bin/bash
-output=$(python getNewScore.py)
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+output=$(python $DIR/getNewScore.py)
 
 truePythonString="True"
 if [ $output=truePythonString ];
