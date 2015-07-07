@@ -1,29 +1,23 @@
 
-def get_tableRows(url):
+def get_team_stats_table(url):
 	from BeautifulSoup import BeautifulSoup
 	from urllib2 import urlopen
-	return BeautifulSoup(urlopen(url).read()).find("table", "responsive").tbody.findAll('tr')
-
-def is_sky_row(tableRow):
-	return tableRow.findAll('td')[0].text == u'Team Sky'
-
-def get_sky_overall_points_from_rows(tableRows):
-	return store_sky_points(int(filter(is_sky_row, tableRows)[0].findAll('td')[6].text))
-
-def is_sky_points_updated(oldScore, url):
-	return oldScore > get_sky_overall_points_from_rows(get_tableRows(url))
+	return BeautifulSoup(urlopen(url).read()).find("table", "responsive").tbody
 
 
-FILENAME_FOR_STORAGE = ".tv2-tourmanager-sky-points-stored"
-def store_sky_points(score):
+def is_hash_value_changed(oldValue, url):
+	return oldValue != store_value(str(hash(str(get_team_stats_table(url)))))
+
+
+FILENAME_FOR_STORAGE = ".tv2-tourmanager-hash-value"
+def store_value(value):
 	import sys,os
-	open(os.path.dirname(sys.argv[0])+"/"+FILENAME_FOR_STORAGE, "w").write(str(score))
-	return score
+	open(os.path.dirname(sys.argv[0])+"/"+FILENAME_FOR_STORAGE, "w").write(value)
+	return value
 
-def read_old_sky_points():
-	
+def read_old_value():
 	import sys,os
-	return int(open(os.path.dirname(sys.argv[0])+"/"+FILENAME_FOR_STORAGE, "r").read())
+	return open(os.path.dirname(sys.argv[0])+"/"+FILENAME_FOR_STORAGE, "r").read()
 
 if __name__=="__main__":
-	print is_sky_points_updated(read_old_sky_points(), "http://tourmanager.tv2.no/stats/?view=con&year=CUR")
+	print is_hash_value_changed(read_old_value(), "http://tourmanager.tv2.no/stats/?view=con&year=CUR")
